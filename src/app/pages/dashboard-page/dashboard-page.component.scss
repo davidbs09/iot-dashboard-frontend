@@ -59,6 +59,34 @@
 }
 
 // ==================================================
+// INDICADOR AUTO-REFRESH NO HEADER
+// ==================================================
+
+.auto-refresh-status {
+  display: flex;
+  align-items: center;
+}
+
+.refresh-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 16px;
+  font-size: 12px;
+  color: #007bff;
+  
+  i {
+    font-size: 14px;
+  }
+  
+  .refresh-text {
+    font-weight: 600;
+  }
+}
+
+// ==================================================
 // STATUS DO SISTEMA
 // ==================================================
 
@@ -481,5 +509,101 @@
     .card-icon {
       margin: 0 auto 12px auto;
     }
+  }
+}
+
+// ==================================================
+// FOOTER ELEGANTE
+// ==================================================
+
+.dashboard-footer {
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.company-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  color: #2c3e50;
+
+  i {
+    color: #007bff;
+    font-size: 20px;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.tech-info {
+  font-size: 14px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.auto-refresh-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #28a745;
+  
+  i.fa-spin {
+    color: #007bff;
+  }
+}
+
+.last-update {
+  font-size: 12px;
+  color: #8e9ba8;
+}
+
+// Responsivo para o footer
+@media (max-width: 768px) {
+  .dashboard-footer {
+    padding: 20px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .footer-right {
+    align-items: center;
+  }
+
+  .company-info {
+    justify-content: center;
   }
 }
