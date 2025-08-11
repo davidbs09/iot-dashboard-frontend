@@ -8,7 +8,6 @@ import {
   DashboardStats,
   StatusDistribution,
   TypeDistribution,
-  ConnectivityStats,
   DeviceAlert,
   DashboardCard,
   ChartData,
@@ -28,7 +27,6 @@ interface DashboardData {
   cards: DashboardCard[];
   statusChart: ChartData;
   typeChart: ChartData;
-  connectivity: ConnectivityStats;
   alerts: DeviceAlert[];
 }
 
@@ -87,17 +85,20 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.dashboardState$ = this.dashboardService.getDashboardState();
   }
 
-  formatLastUpdate(date: Date): string {
+  formatLastUpdate(isoString: string | Date): string {
+    if (!isoString) return 'Nunca';
+    
+    const date = typeof isoString === 'string' ? new Date(isoString) : isoString;
     const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     
-    if (minutes < 1) return 'Agora mesmo';
-    if (minutes === 1) return 'Há 1 minuto';
-    if (minutes < 60) return `Há ${minutes} minutos`;
+    if (diffInMinutes < 1) return 'Agora mesmo';
+    if (diffInMinutes < 60) return `${diffInMinutes} min atrás`;
     
-    return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours}h atrás`;
+    
+    return date.toLocaleDateString('pt-BR');
   }
 
   getSystemStatusText(status: string): string {

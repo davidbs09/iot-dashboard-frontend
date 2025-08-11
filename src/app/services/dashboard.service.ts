@@ -101,48 +101,6 @@ export class DashboardService {
     }
 
     /**
-     * Busca métricas de conectividade baseado nos dispositivos reais
-     */
-    getConnectivityStats(): Observable<ConnectivityStats> {
-        return this.deviceService.getAllDevices().pipe(
-            map(devices => {
-                const totalDevices = devices.length;
-                
-                // Usa a mesma lógica de contagem do dashboard
-                let onlineDevices = 0;
-                devices.forEach(device => {
-                    const status = String(device.status).toUpperCase();
-                    const isActive = device.isActive;
-                    
-                    if (status === 'ATIVO' || status === 'ACTIVE' || isActive === true) {
-                        onlineDevices++;
-                    }
-                });
-                
-                const connectivityRate = totalDevices > 0 ? Math.round((onlineDevices / totalDevices) * 100) : 0;
-                
-                // Métricas baseadas nos dispositivos reais
-                const connectivity: ConnectivityStats = {
-                    onlineLast5Min: onlineDevices,
-                    onlineLast1Hour: Math.min(onlineDevices + Math.floor(Math.random() * 2), totalDevices),
-                    onlineToday: Math.min(onlineDevices + Math.floor(Math.random() * 3), totalDevices),
-                    averageUptimePercentage: connectivityRate,
-                    networkConnectivityRate: connectivityRate,
-                    totalCommunicationAttempts: totalDevices * 25, // Simula tentativas de comunicação
-                    peakOnlineHour: Math.max(14, onlineDevices), // Simula pico às 14h
-                    lastNetworkUpdate: new Date().toISOString()
-                };
-
-                return connectivity;
-            }),
-            catchError(error => {
-                console.error('❌ Erro ao calcular conectividade:', error);
-                return of(this.createFallbackConnectivity());
-            })
-        );
-    }
-
-    /**
      * Busca distribuição por tipo baseado nos dispositivos reais
      */
     getTypeDistribution(): Observable<TypeDistribution[]> {
@@ -230,19 +188,17 @@ export class DashboardService {
     getDashboardData(): Observable<any> {
         return combineLatest([
             this.getDashboardStats(),
-            this.getConnectivityStats(),
             this.getTypeDistribution(),
             this.getStatusDistribution(),
             this.getActiveAlerts()
         ]).pipe(
-            map(([stats, connectivity, typeDistribution, statusDistribution, alerts]) => {
+            map(([stats, typeDistribution, statusDistribution, alerts]) => {
                 const cards = this.createDashboardCards(stats);
                 const typeChart = this.createTypeChart(typeDistribution);
                 const statusChart = this.createStatusChart(statusDistribution);
 
                 return {
                     stats,
-                    connectivity,
                     typeDistribution,
                     statusDistribution,
                     alerts,
@@ -514,22 +470,6 @@ export class DashboardService {
             systemStatus: 'WARNING',
             uptimePercentage: 0,
             lastUpdate: new Date().toISOString()
-        };
-    }
-
-    /**
-     * Cria conectividade de fallback em caso de erro
-     */
-    private createFallbackConnectivity(): ConnectivityStats {
-        return {
-            onlineLast5Min: 0,
-            onlineLast1Hour: 0,
-            onlineToday: 0,
-            averageUptimePercentage: 0,
-            networkConnectivityRate: 0,
-            totalCommunicationAttempts: 0,
-            peakOnlineHour: 0,
-            lastNetworkUpdate: new Date().toISOString()
         };
     }
 
