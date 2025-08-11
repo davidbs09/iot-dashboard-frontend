@@ -61,11 +61,9 @@ export class DevicesPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (devices: Device[]) => {
-          console.log('Estatísticas - dispositivos recebidos:', devices); // Debug
           this.totalDevices = devices.length;
           this.onlineDevices = devices.filter(device => device.isActive).length;
           this.offlineDevices = devices.filter(device => !device.isActive).length;
-          console.log(`Total: ${this.totalDevices}, Online: ${this.onlineDevices}, Offline: ${this.offlineDevices}`); // Debug
           this.isLoadingStats = false;
         },
         error: (error) => {

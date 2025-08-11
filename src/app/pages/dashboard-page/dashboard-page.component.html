@@ -1,0 +1,180 @@
+<!-- Dashboard IoT - Página Principal -->
+<div class="dashboard-page">
+
+  <!-- Header do Dashboard -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <h1 class="dashboard-title">
+        <i class="fas fa-tachometer-alt"></i>
+        Dashboard IoT
+      </h1>
+      <p class="dashboard-subtitle">Monitoramento em tempo real dos dispositivos</p>
+    </div>
+    
+    <div class="header-right">
+      <!-- Status do Sistema -->
+      <div class="system-status" 
+           *ngIf="(data$ | async)?.stats as stats"
+           [ngClass]="getSystemStatusClass(stats.systemStatus)">
+        <i class="status-icon fas fa-circle"></i>
+        <span>{{ getSystemStatusText(stats.systemStatus) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Geral -->
+  <div class="dashboard-loading" 
+       *ngIf="(dashboardState$ | async)?.isLoading && loadingStates.dashboard">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p>Carregando dashboard...</p>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="dashboard-content" 
+       *ngIf="data$ | async as data; else loadingTemplate">
+
+    <!-- Cards de Estatísticas -->
+    <section class="stats-section">
+      <h2 class="section-title">Métricas Principais</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let card of data.cards; trackBy: trackByCardTitle">
+          <app-dashboard-card [card]="card"></app-dashboard-card>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gráficos -->
+    <section class="charts-section">
+      <div class="charts-grid">
+        
+        <!-- Gráfico de Status -->
+        <div class="chart-container">
+          <app-dashboard-chart 
+            [chartData]="data.statusChart"
+            [title]="'Distribuição por Status'"
+            [chartType]="'doughnut'"
+            [height]="300">
+          </app-dashboard-chart>
+        </div>
+        
+        <!-- Gráfico de Tipos -->
+        <div class="chart-container">
+          <app-dashboard-chart 
+            [chartData]="data.typeChart"
+            [title]="'Distribuição por Tipo'"
+            [chartType]="'doughnut'"
+            [height]="300">
+          </app-dashboard-chart>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Métricas de Conectividade -->
+    <section class="connectivity-section">
+      <h2 class="section-title">Conectividade da Rede IoT</h2>
+      
+      <div class="connectivity-grid">
+        
+        <!-- Uptime Médio -->
+        <div class="connectivity-card">
+          <div class="card-icon">
+            <i class="fas fa-signal"></i>
+          </div>
+          <div class="card-content">
+            <h4>Uptime Médio</h4>
+            <span class="value">{{ (data.connectivity.averageUptimePercentage || 0).toFixed(1) }}%</span>
+            <p>Taxa de disponibilidade</p>
+          </div>
+        </div>
+        
+        <!-- Taxa de Conectividade -->
+        <div class="connectivity-card">
+          <div class="card-icon">
+            <i class="fas fa-wifi"></i>
+          </div>
+          <div class="card-content">
+            <h4>Taxa de Conectividade</h4>
+            <span class="value">{{ (data.connectivity.networkConnectivityRate || 0).toFixed(1) }}%</span>
+            <p>Comunicação da rede</p>
+          </div>
+        </div>
+        
+        <!-- Online Agora -->
+        <div class="connectivity-card">
+          <div class="card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="card-content">
+            <h4>Online (5 min)</h4>
+            <span class="value">{{ data.connectivity.onlineLast5Min || 0 }}</span>
+            <p>Dispositivos ativos</p>
+          </div>
+        </div>
+        
+        <!-- Tentativas de Comunicação -->
+        <div class="connectivity-card">
+          <div class="card-icon">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div class="card-content">
+            <h4>Comunicações</h4>
+            <span class="value">{{ (data.connectivity.totalCommunicationAttempts || 0) | number }}</span>
+            <p>Total de tentativas</p>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Alertas do Sistema -->
+    <section class="alerts-section">
+      <div class="alerts-container">
+        <app-dashboard-alerts 
+          [alerts]="data.alerts"
+          [maxAlertsToShow]="5">
+        </app-dashboard-alerts>
+      </div>
+    </section>
+
+    <!-- Footer com Informações -->
+    <footer class="dashboard-footer" 
+            *ngIf="dashboardState$ | async as state">
+      <div class="footer-info">
+        <span class="last-update">
+          {{ formatLastUpdate(state.lastUpdate) }}
+        </span>
+        <span class="refresh-interval" *ngIf="state.autoRefresh">
+          Atualização automática a cada {{ state.refreshInterval }}s
+        </span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Template de Loading -->
+  <ng-template #loadingTemplate>
+    <div class="dashboard-skeleton">
+      
+      <!-- Skeleton Cards -->
+      <div class="skeleton-section">
+        <div class="skeleton-grid">
+          <div class="skeleton-card" *ngFor="let item of [1,2,3,4,5,6]"></div>
+        </div>
+      </div>
+      
+      <!-- Skeleton Charts -->
+      <div class="skeleton-section">
+        <div class="skeleton-charts">
+          <div class="skeleton-chart"></div>
+          <div class="skeleton-chart"></div>
+        </div>
+      </div>
+      
+    </div>
+  </ng-template>
+
+</div>

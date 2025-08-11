@@ -91,7 +91,6 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        console.log('DeviceListComponent inicializando...'); // Debug
         this.loadDevices();
     }
 
@@ -110,7 +109,6 @@ export class DeviceListComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (devices) => {
-                    console.log('Dispositivos carregados:', devices); // Debug
                     this.devices = devices;
                     this.applyFilters();
                     this.isLoading = false;
@@ -130,7 +128,6 @@ export class DeviceListComponent implements OnInit, OnDestroy {
      * Carrega dados de fallback em caso de falha
      */
     loadFallbackData(): void {
-        console.log('Carregando dados de fallback...');
         this.devices = []; // Dados vazios por enquanto - esperando dados reais do backend
         this.applyFilters();
         this.deviceListChanged.emit();
