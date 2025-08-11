@@ -3,8 +3,12 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/devices',
+    redirectTo: '/dashboard',
     pathMatch: 'full'
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard-page/dashboard-page.component').then(c => c.DashboardPageComponent)
   },
   {
     path: 'devices',
@@ -12,6 +16,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/devices'
+    redirectTo: '/dashboard'
   }
 ];

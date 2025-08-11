@@ -1,5 +1,16 @@
 /* Estilos globais da aplicação IoT Dashboard */
 
+// Força tema claro em todos os dialogs do Material
+.mat-mdc-dialog-container {
+  background-color: white !important;
+  color: #495057 !important;
+}
+
+.mat-mdc-dialog-surface {
+  background-color: white !important;
+  color: #495057 !important;
+}
+
 // Reset básico
 html, body { 
   height: 100%; 

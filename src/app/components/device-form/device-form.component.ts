@@ -104,8 +104,16 @@ export class DeviceFormComponent implements OnInit {
             description: ['', [
                 Validators.maxLength(500)
             ]],
-            latitude: [null],
-            longitude: [null]
+            latitude: [null, [
+                Validators.min(-90),
+                Validators.max(90)
+            ]],
+            longitude: [null, [
+                Validators.min(-180),
+                Validators.max(180)
+            ]],
+            isActive: [true], // Campo para ativar/desativar dispositivo
+            lastReading: [''] // Campo para última leitura (opcional)
         });
     }
 
@@ -121,7 +129,9 @@ export class DeviceFormComponent implements OnInit {
             deviceIdentifier: device.deviceIdentifier,
             description: device.description,
             latitude: device.latitude,
-            longitude: device.longitude
+            longitude: device.longitude,
+            isActive: device.isActive,
+            lastReading: device.lastReading || ''
         });
     }
 
@@ -278,7 +288,57 @@ export class DeviceFormComponent implements OnInit {
     /**
      * Formata a data para exibição
      */
-    formatDate(date: Date): string {
+    formatDate(date: Date | string): string {
+        if (!date) return 'N/A';
         return new Date(date).toLocaleString('pt-BR');
+    }
+
+    /**
+     * Retorna o display amigável para o tipo de dispositivo
+     */
+    getDeviceTypeDisplay(type: string): string {
+        const typeMap: { [key: string]: string } = {
+            'TEMPERATURE_SENSOR': 'Sensor de Temperatura',
+            'HUMIDITY_SENSOR': 'Sensor de Umidade', 
+            'PRESSURE_SENSOR': 'Sensor de Pressão',
+            'VIBRATION_SENSOR': 'Sensor de Vibração',
+            'GPS_TRACKER': 'Rastreador GPS',
+            'CAMERA': 'Câmera',
+            'GENERIC': 'Genérico',
+            'ACTUATOR': 'Atuador',
+            'GATEWAY': 'Gateway',
+            'OXYGEN_METER': 'Medidor de Oxigênio'
+        };
+        return typeMap[type] || type;
+    }
+
+    /**
+     * Retorna o display amigável para o status
+     */
+    getStatusDisplay(status: string): string {
+        const statusMap: { [key: string]: string } = {
+            'ACTIVE': 'Ativo',
+            'INACTIVE': 'Inativo',
+            'MAINTENANCE': 'Manutenção',
+            'ERROR': 'Erro',
+            'OFFLINE': 'Offline',
+            'CONFIGURING': 'Configurando'
+        };
+        return statusMap[status] || status;
+    }
+
+    /**
+     * Retorna o ícone para o status
+     */
+    getStatusIcon(status: string): string {
+        const iconMap: { [key: string]: string } = {
+            'ACTIVE': 'check_circle',
+            'INACTIVE': 'pause_circle',
+            'MAINTENANCE': 'build',
+            'ERROR': 'error',
+            'OFFLINE': 'wifi_off',
+            'CONFIGURING': 'settings'
+        };
+        return iconMap[status] || 'help';
     }
 }
