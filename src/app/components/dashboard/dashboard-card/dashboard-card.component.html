@@ -1,6 +1,6 @@
 <!-- Card de Estatística com Design Moderno -->
 <div class="dashboard-card" [ngClass]="'card-' + card.color">
-  
+
   <!-- Header do Card -->
   <div class="card-header">
     <div class="card-icon">
@@ -20,12 +20,11 @@
   <!-- Trend/Tendência (se disponível) -->
   <div class="card-trend" *ngIf="card.trend">
     <div class="trend-container" [ngClass]="'trend-' + card.trend.direction">
-      <i class="trend-icon" 
-         [ngClass]="{
-           'fas fa-arrow-up': card.trend.direction === 'up',
-           'fas fa-arrow-down': card.trend.direction === 'down',
-           'fas fa-minus': card.trend.direction === 'stable'
-         }"></i>
+      <i class="trend-icon" [ngClass]="{
+            'fas fa-arrow-up': card.trend.direction === 'up',
+            'fas fa-arrow-down': card.trend.direction === 'down',
+            'fas fa-minus': card.trend.direction === 'stable'
+          }"></i>
       <span class="trend-percentage">{{ card.trend.percentage.toFixed(1) }}%</span>
     </div>
     <p class="trend-description">{{ card.trend.description }}</p>
